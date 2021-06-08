@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@tailwindcss/aspect-ratio": "^0.2.1",
+    "@tailwindcss/forms": "^0.3.3",
     "core-js": "^3.6.5",
     "nuxt": "^2.14.6",
-    "nuxt-shopify": "^1.10.7"
+    "nuxt-shopify": "^1.10.7",
+    "vue-select": "^3.11.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",

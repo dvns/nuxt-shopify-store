@@ -1,4 +1,5 @@
 import aspectRatio from '@tailwindcss/aspect-ratio'
+import forms from '@tailwindcss/forms'
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
@@ -40,7 +41,7 @@ export default {
 
   tailwindcss: {
     config: {
-      plugins: [aspectRatio],
+      plugins: [aspectRatio, forms],
     },
   },
 
