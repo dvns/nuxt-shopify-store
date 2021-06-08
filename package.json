@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.2.1",
     "core-js": "^3.6.5",
     "nuxt": "^2.14.6",
     "nuxt-shopify": "^1.10.7"
