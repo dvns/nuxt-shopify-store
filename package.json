@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-shopify",
+  "name": "nuxt-shopify-store",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "nuxt": "^2.14.6"
+    "nuxt": "^2.14.6",
+    "nuxt-shopify": "^1.10.7"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.1.0",
