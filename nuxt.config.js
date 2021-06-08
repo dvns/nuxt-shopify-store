@@ -31,8 +31,32 @@ export default {
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [],
+  modules: ['nuxt-shopify'],
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+
+  shopify: {
+    /**
+     * Your shopify domain
+     */
+    domain: process.env.SHOPIFY_DOMAIN,
+
+    /**
+     * Your shopify storefront access token
+     */
+    storefrontAccessToken: process.env.SHOPIFY_ACCESS_TOKEN,
+
+    /**
+     * This will be larger than the optimized version, as it will contain all fields that are available in the
+     * Storefront API. (https://help.shopify.com/en/api/custom-storefronts/storefront-api/reference)
+     * This should only be used when you need to add custom queries to supplement the JS Buy SDK queries.
+     */
+    unoptimized: false,
+
+    /**
+     * Set language to return translated content (optional)
+     */
+    // language: 'ja-JP',
+  },
 }

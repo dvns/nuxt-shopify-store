@@ -1,32 +1,25 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">nuxt-shopify</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+  <main>
+    <ul>
+      <li v-for="product in products" :key="product.id">
+        {{ product.title }}
+        <img
+          :src="product.images[0].src"
+          :alt="product.description"
+          width="200"
+        />
+      </li>
+    </ul>
+  </main>
 </template>
 
 <script>
-export default {}
+export default {
+  async asyncData({ $shopify, params }) {
+    const products = await $shopify.product.fetchAll()
+    return { products }
+  },
+}
 </script>
 
 <style>
