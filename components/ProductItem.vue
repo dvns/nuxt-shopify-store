@@ -9,17 +9,34 @@
     </div>
     <div class="text-center py-4">
       <p>{{ product.title }}</p>
-      <p>from $$$</p>
+      <p>from {{ lowestPrice }}</p>
     </div>
   </NuxtLink>
 </template>
 
 <script>
+import formatMoney from '@/lib/formatMoney'
 export default {
   props: {
     product: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    lowestPrice() {
+      const variantWithLowestPrice = this.product.variants.reduce(
+        (prev, current) => {
+          const prevPrice = parseFloat(prev.price)
+          const currentPrice = parseFloat(current.price)
+          if (currentPrice < prevPrice) {
+            return current
+          } else {
+            return prev
+          }
+        }
+      )
+      return formatMoney(variantWithLowestPrice.priceV2)
     },
   },
 }
