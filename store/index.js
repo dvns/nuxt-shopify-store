@@ -12,8 +12,14 @@ export const mutations = {
 }
 
 export const actions = {
-  async createCheckout({ state, commit }) {
+  async createCheckout({ commit, state }) {
     await this.$shopify.checkout.create().then((checkout) => {
+      commit('UPDATE_CHECKOUT', checkout)
+    })
+  },
+
+  async updateCheckout({ commit, state }) {
+    await this.$shopify.checkout.fetch(state.checkout.id).then((checkout) => {
       commit('UPDATE_CHECKOUT', checkout)
     })
   },

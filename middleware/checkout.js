@@ -3,5 +3,15 @@ export default async function ({ store }) {
     if (!store.getters.checkout?.id) {
       await store.dispatch('createCheckout')
     }
+
+    // Force a checkout refresh on each page load
+    if (store.getters.checkout.id) {
+      await store.dispatch('updateCheckout')
+
+      // // If checkout is complete, create a new checkout Id
+      // if (app.store.getters['checkout/isCheckoutComplete']) {
+      //   await app.store.dispatch('checkout/createCheckout')
+      // }
+    }
   }
 }
