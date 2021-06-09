@@ -8,10 +8,11 @@ export default async function ({ store }) {
     if (store.getters.checkoutId) {
       await store.dispatch('updateCheckout')
 
-      // // If checkout is complete, create a new checkout Id
-      // if (app.store.getters['checkout/isCheckoutComplete']) {
-      //   await app.store.dispatch('checkout/createCheckout')
-      // }
+      // If checkout is complete, create a new checkout Id
+      if (store.getters.isCheckoutComplete) {
+        // console.log('# Checkout is complete. Creating a new one.')
+        await store.dispatch('createCheckout')
+      }
     }
   }
 }

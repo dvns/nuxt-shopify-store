@@ -7,6 +7,13 @@ export const getters = {
   checkoutId(state) {
     return state.checkout.id
   },
+  isCheckoutComplete(state) {
+    return (
+      state.checkout &&
+      state.checkout.completedAt !== null &&
+      typeof state.checkout.completedAt !== 'undefined'
+    )
+  },
 }
 
 export const mutations = {
@@ -46,7 +53,7 @@ export const actions = {
     commit('UPDATE_LOADING', true)
 
     if (!state.checkout.id) {
-      console.log('# Checkout does not exist! Creating a new one.')
+      // console.log('# Checkout does not exist! Creating a new one.')
       await dispatch('createCheckout')
     }
     await this.$shopify.checkout
