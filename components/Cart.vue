@@ -1,29 +1,34 @@
 <template>
   <div>
     <h1>Cart</h1>
-    <ul>
-      <li v-for="item in items" :key="item.id">
-        <div class="grid grid-cols-4">
-          <p>{{ item.title }} {{ item.variant.title }}</p>
-          <input
-            type="number"
-            :value="loading ? tempQty[item.id] : item.quantity"
-            min="0"
-            :disabled="loading"
-            @input="(e) => handleQuantityChange(e, item)"
-          />
-          <p>{{ item.variant.price }}</p>
-          <button :disabled="loading" @click="() => removeItem(item.id)">
-            Remove
-          </button>
-          <p>
-            {{ (parseFloat(item.variant.price) * item.quantity).toFixed(2) }}
-          </p>
-        </div>
-      </li>
-    </ul>
-    <p>{{ checkout.paymentDue }}</p>
-    <button :disabled="loading" @click="goToCheckout">Checkout</button>
+    <div v-show="items.length > 0">
+      <ul>
+        <li v-for="item in items" :key="item.id">
+          <div class="grid grid-cols-4">
+            <p>{{ item.title }} {{ item.variant.title }}</p>
+            <input
+              type="number"
+              :value="loading ? tempQty[item.id] : item.quantity"
+              min="0"
+              :disabled="loading"
+              @input="(e) => handleQuantityChange(e, item)"
+            />
+            <p>{{ item.variant.price }}</p>
+            <button :disabled="loading" @click="() => removeItem(item.id)">
+              Remove
+            </button>
+            <p>
+              {{ (parseFloat(item.variant.price) * item.quantity).toFixed(2) }}
+            </p>
+          </div>
+        </li>
+      </ul>
+      <p>{{ checkout.paymentDue }}</p>
+      <button :disabled="loading" @click="goToCheckout">Checkout</button>
+    </div>
+    <div v-show="items.length === 0">
+      <p>Cart is empty</p>
+    </div>
   </div>
 </template>
 
