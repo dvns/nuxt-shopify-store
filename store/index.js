@@ -3,10 +3,13 @@ export const state = () => ({
   loading: true,
 })
 
-export const mutations = {
-  SET_CHECKOUT_ID(state, checkoutId) {
-    state.checkout.id = checkoutId
+export const getters = {
+  checkoutId(state) {
+    return state.checkout.id
   },
+}
+
+export const mutations = {
   UPDATE_CHECKOUT(state, checkout) {
     state.checkout = { ...checkout }
   },
@@ -76,11 +79,5 @@ export const actions = {
         commit('UPDATE_CHECKOUT', checkout)
         commit('UPDATE_LOADING', false)
       })
-  },
-}
-
-export const getters = {
-  checkout(state) {
-    return state.checkout
   },
 }
