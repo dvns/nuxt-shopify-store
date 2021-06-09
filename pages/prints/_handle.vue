@@ -21,18 +21,19 @@
         ></v-select>
         <p>{{ formatMoney(selected.priceV2) }}</p>
         <button
-          :disabled="!selected.available"
+          :disabled="!selected.available || loading"
           @click="() => addItem(selected.id)"
         >
           {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
         </button>
       </div>
     </div>
+    <Cart />
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import formatMoney from '@/lib/formatMoney'
@@ -45,8 +46,8 @@ export default {
     const product = await $shopify.product.fetchByHandle(params.handle)
     return { product, selected: product.variants[0] }
   },
-  data() {
-    return {}
+  computed: {
+    ...mapState(['loading']),
   },
   methods: {
     formatMoney,
