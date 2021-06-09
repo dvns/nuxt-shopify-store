@@ -19,13 +19,11 @@
           :searchable="false"
           :clearable="false"
         ></v-select>
-        <!-- <ul>
-          <li v-for="variant in product.variants" :key="variant.id">
-            {{ variant.title }} - {{ formatMoney(variant.priceV2) }}
-          </li>
-        </ul> -->
         <p>{{ formatMoney(selected.priceV2) }}</p>
-        <button :disabled="selected.available">
+        <button
+          :disabled="!selected.available"
+          @click="() => addItem(selected.id)"
+        >
           {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
         </button>
       </div>
@@ -34,9 +32,10 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
-import formatMoney from '../../lib/formatMoney'
+import formatMoney from '@/lib/formatMoney'
 
 export default {
   components: {
@@ -51,6 +50,7 @@ export default {
   },
   methods: {
     formatMoney,
+    ...mapActions(['addItem']),
   },
 }
 </script>
