@@ -1,6 +1,6 @@
 export const state = () => ({
   checkout: {},
-  loading: true,
+  loading: false,
 })
 
 export const getters = {
@@ -20,6 +20,7 @@ export const mutations = {
 
 export const actions = {
   async createCheckout({ commit, state }) {
+    commit('UPDATE_LOADING', true)
     await this.$shopify.checkout.create().then((checkout) => {
       commit('UPDATE_CHECKOUT', checkout)
       commit('UPDATE_LOADING', false)
@@ -27,6 +28,7 @@ export const actions = {
   },
 
   async updateCheckout({ commit, state }) {
+    commit('UPDATE_LOADING', true)
     await this.$shopify.checkout.fetch(state.checkout.id).then((checkout) => {
       commit('UPDATE_CHECKOUT', checkout)
       commit('UPDATE_LOADING', false)
