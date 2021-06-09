@@ -41,6 +41,16 @@ export const actions = {
         commit('UPDATE_CHECKOUT', checkout)
       })
   },
+
+  async removeItem({ commit, state }, variantId) {
+    const lineItemIdsToRemove = [variantId]
+
+    await this.$shopify.checkout
+      .removeLineItems(state.checkout.id, lineItemIdsToRemove)
+      .then((checkout) => {
+        commit('UPDATE_CHECKOUT', checkout)
+      })
+  },
 }
 
 export const getters = {
