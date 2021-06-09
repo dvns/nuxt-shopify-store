@@ -5,7 +5,13 @@
       <li v-for="item in items" :key="item.id">
         <div class="grid grid-cols-4">
           <p>{{ item.title }} {{ item.variant.title }}</p>
-          <p>Quantity: {{ item.quantity }}</p>
+          <input
+            type="number"
+            :value="loading ? tempQty[item.id] : item.quantity"
+            min="0"
+            :disabled="loading"
+            @input="(e) => handleQuantityChange(e, item)"
+          />
           <p>{{ item.variant.price }}</p>
           <button :disabled="loading" @click="() => removeItem(item.id)">
             Remove
@@ -23,7 +29,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import debounce from 'lodash/debounce'
 export default {
+  data() {
+    return {
+      // Store and render this value while component input is sync'ing with vuex
+      tempQty: {},
+    }
+  },
   computed: {
     ...mapState(['loading', 'checkout']),
     items() {
@@ -31,10 +44,28 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['removeItem']),
+    ...mapActions(['removeItem', 'updateItemQuantity']),
     goToCheckout() {
       window.open(this.checkout.webUrl)
     },
+    handleQuantityChange: debounce(function (e, item) {
+      const type = e.target.type
+      let value = e.target.value
+
+      if (type === 'number' && value !== '') {
+        value = parseInt(value)
+      }
+
+      // Store its value, so that it can be rendered as the input value while Vuex is updating
+      this.tempQty[item.id] = value
+
+      if (value !== '') {
+        this.updateItemQuantity({
+          variantId: item.id,
+          quantity: value,
+        })
+      }
+    }, 500),
   },
 }
 </script>
