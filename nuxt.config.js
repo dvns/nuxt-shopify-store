@@ -44,8 +44,16 @@ export default {
   build: {},
 
   tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
     config: {
       plugins: [aspectRatio, forms],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Acumin'],
+          },
+        },
+      },
     },
   },
 

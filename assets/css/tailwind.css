@@ -1,0 +1,13 @@
+/* purgecss start ignore */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+/* purgecss end ignore */
+@import 'tailwindcss/utilities';
+
+@layer base {
+  @font-face {
+    font-family: 'Acumin';
+    font-weight: 400;
+    src: url('~assets/fonts/AcuminPro-Light.otf') format('opentype');
+  }
+}
