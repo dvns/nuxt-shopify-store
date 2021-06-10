@@ -50,7 +50,8 @@ export default {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Acumin'],
+            sans: ['Gotham'],
+            serif: ['Garamond'],
           },
         },
       },

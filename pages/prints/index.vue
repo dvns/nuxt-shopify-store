@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto px-4">
-    <h1>Prints Page</h1>
+  <div>
+    <h1 class="page-title">Prints</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div v-for="product in products" :key="product.id">
         <ProductItem :product="product" />

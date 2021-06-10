@@ -8,8 +8,10 @@
       />
     </div>
     <div class="text-center py-4">
-      <p>{{ product.title }}</p>
-      <p>from {{ lowestPrice }}</p>
+      <p class="font-serif tracking-widest text-sm uppercase pt-4 pb-2">
+        {{ product.title }}
+      </p>
+      <p class="text-sm">from {{ lowestPrice }}</p>
     </div>
   </NuxtLink>
 </template>
@@ -41,5 +43,3 @@ export default {
   },
 }
 </script>
-
-<style></style>
