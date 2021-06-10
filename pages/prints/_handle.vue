@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto px-4">
-    <NuxtLink to="/prints">Back to Prints</NuxtLink>
+    <!-- <NuxtLink to="/prints">Back to Prints</NuxtLink> -->
     <h1 class="page-title">{{ product.title }}</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="aspect-w-1 aspect-h-1 mb-8">
@@ -11,17 +11,18 @@
         />
       </div>
       <div>
-        <form action="" class="mx-auto sm:max-w-sm p-4 pt-0">
+        <form class="mx-auto sm:max-w-sm p-4 pt-0">
           <p class="pb-2">Print options:</p>
-          <div class="pb-4">
+          <fieldset class="pb-4" :disabled="loading" :aria-busy="loading">
             <v-select
               v-model="selected"
               :options="product.variants"
               label="title"
               :searchable="false"
               :clearable="false"
+              class="product-select"
             />
-          </div>
+          </fieldset>
 
           <div class="py-8">
             <p class="text-xl font-medium">
@@ -31,12 +32,14 @@
               Not including taxes and shipping fees
             </p>
           </div>
-          <cta-button
-            :disabled="!selected.available || loading"
-            @click.native="() => addItem(selected.id)"
-          >
-            {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
-          </cta-button>
+          <fieldset :disabled="loading" :aria-busy="loading">
+            <cta-button
+              :disabled="!selected.available || loading"
+              @click.native="() => addItem(selected.id)"
+            >
+              {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
+            </cta-button>
+          </fieldset>
         </form>
       </div>
     </div>
@@ -67,3 +70,19 @@ export default {
   },
 }
 </script>
+
+<style lang="postcss" scoped>
+::v-deep .product-select .vs__dropdown-toggle,
+::v-deep .product-select .vs__dropdown-menu {
+  @apply rounded-none border-black text-sm;
+}
+
+::v-deep .product-select .vs__fade-enter-active,
+.vs__fade-leave-active {
+  transition: none;
+}
+
+::v-deep .product-select .vs__open-indicator {
+  @apply fill-current;
+}
+</style>
