@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto px-4">
     <!-- <NuxtLink to="/prints">Back to Prints</NuxtLink> -->
-    <h1 class="page-title">{{ product.title }}</h1>
+    <h1 class="title my-12">{{ product.title }}</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="aspect-w-1 aspect-h-1 mb-8">
         <img
@@ -35,7 +35,13 @@
           <fieldset :disabled="loading" :aria-busy="loading">
             <cta-button
               :disabled="!selected.available || loading"
-              @click.native="() => addItem(selected.id)"
+              @click.native="
+                () => {
+                  addItem(selected.id).then(() => {
+                    setShowCart(true)
+                  })
+                }
+              "
             >
               {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
             </cta-button>
@@ -43,7 +49,6 @@
         </form>
       </div>
     </div>
-    <!-- <Cart /> -->
   </div>
 </template>
 
@@ -66,7 +71,7 @@ export default {
   },
   methods: {
     formatMoney,
-    ...mapActions(['addItem']),
+    ...mapActions(['addItem', 'setShowCart']),
   },
 }
 </script>

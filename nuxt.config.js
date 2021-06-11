@@ -20,7 +20,10 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [{ src: '~/plugins/persistedState.client.js', ssr: false }],
+  plugins: [
+    { src: '~/plugins/persistedState.client.js', ssr: false },
+    { src: '~/plugins/featherIcons.js' },
+  ],
 
   router: {
     middleware: 'checkout',
@@ -41,7 +44,9 @@ export default {
   modules: ['nuxt-shopify'],
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
+  build: {
+    transpile: ['vue-icon'],
+  },
 
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
@@ -52,6 +57,10 @@ export default {
           fontFamily: {
             sans: ['Gotham'],
             serif: ['Garamond'],
+          },
+          transitionProperty: { height: 'height' },
+          inset: {
+            '1/2': '50%',
           },
         },
       },

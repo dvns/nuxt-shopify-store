@@ -1,6 +1,7 @@
 export const state = () => ({
   checkout: {},
   loading: false,
+  showCart: false,
 })
 
 export const getters = {
@@ -14,6 +15,9 @@ export const getters = {
       typeof state.checkout.completedAt !== 'undefined'
     )
   },
+  cartCount(state) {
+    return state.checkout?.lineItems?.length || 0
+  },
 }
 
 export const mutations = {
@@ -22,6 +26,9 @@ export const mutations = {
   },
   UPDATE_LOADING(state, loading) {
     state.loading = loading
+  },
+  SET_SHOW_CART(state, showCart) {
+    state.showCart = showCart
   },
 }
 
@@ -88,5 +95,9 @@ export const actions = {
         commit('UPDATE_CHECKOUT', checkout)
         commit('UPDATE_LOADING', false)
       })
+  },
+
+  setShowCart({ commit }, showCart) {
+    commit('SET_SHOW_CART', showCart)
   },
 }

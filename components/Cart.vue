@@ -1,70 +1,183 @@
 <template>
-  <div>
-    <h1>Cart</h1>
-    <div v-show="items && items.length > 0">
-      <ul>
-        <li v-for="item in items" :key="item.id">
-          <div class="grid grid-cols-4">
-            <p>{{ item.title }} {{ item.variant.title }}</p>
-            <input
-              type="number"
-              :value="loading ? tempQty[item.id] : item.quantity"
-              min="0"
-              :disabled="loading"
-              @input="(e) => handleQuantityChange(e, item)"
-            />
-            <p>{{ item.variant.price }}</p>
-            <button :disabled="loading" @click="() => removeItem(item.id)">
-              Remove
+  <transition name="fade">
+    <div
+      v-show="showCart"
+      class="w-full h-screen bg-gray-800 bg-opacity-75 transition fixed z-50"
+      @click.self="setShowCart(false)"
+    >
+      <div
+        class="
+          w-full
+          h-auto
+          max-h-screen
+          bg-white
+          px-4
+          transform
+          transition-transform
+          absolute
+          bottom-0
+          duration-300
+          overflow-y-auto
+        "
+        :class="showCart ? 'transform-translate-y' : 'translate-y-full'"
+      >
+        <div class="max-w-xl mx-auto px-4">
+          <header
+            class="sticky top-0 bg-white z-10 py-8 border-b border-gray-200"
+          >
+            <h1 class="title">Your Cart</h1>
+            <button
+              class="w-6 absolute right-0 top-1/2 transform -translate-y-1/2"
+              @click="setShowCart(false)"
+            >
+              <v-icon name="x" aria-label="Close Cart" />
             </button>
-            <p>
-              {{ (parseFloat(item.variant.price) * item.quantity).toFixed(2) }}
-            </p>
+          </header>
+          <div v-show="items && items.length > 0" class="py-8">
+            <ul>
+              <li v-for="item in items" :key="item.id">
+                <div class="grid grid-cols-12 mb-8 gap-4">
+                  <div class="col-span-3 sm:col-span-2">
+                    <div class="aspect-w-2 aspect-h-2">
+                      <img
+                        :src="item.variant.image.src"
+                        :alt="item.variant.image.altText"
+                        class="object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="
+                      col-span-6
+                      sm:col-span-7
+                      flex flex-col
+                      justify-between
+                    "
+                  >
+                    <div>
+                      <p class="text-sm underline">
+                        <NuxtLink
+                          :to="{
+                            name: 'prints-handle',
+                            params: { handle: item.variant.product.handle },
+                          }"
+                        >
+                          {{ item.title }}
+                        </NuxtLink>
+                      </p>
+                      <p class="text-sm text-gray-600">
+                        {{ item.variant.title }}
+                      </p>
+                    </div>
+                    <div class="flex content-center">
+                      <vue-number-input
+                        :min="0"
+                        center
+                        controls
+                        size="small"
+                        :value="item.quantity"
+                        @change="(e) => handleQuantityChange(e, item)"
+                        @input="
+                          (e) => handleQuantityChange(e.target.value, item)
+                        "
+                      />
+                      <button
+                        :disabled="loading"
+                        class="text-xs underline"
+                        @click="() => removeItem(item.id)"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-span-3 flex justify-end">
+                    <p class="text-lg text-right my-auto">
+                      {{
+                        checkout.paymentDueV2 &&
+                        formatMoney({
+                          ...checkout.paymentDueV2,
+                          amount: (
+                            parseFloat(item.variant.price) * item.quantity
+                          ).toFixed(2),
+                        })
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
-        </li>
-      </ul>
-      <p>{{ checkout.paymentDue }}</p>
-      <button :disabled="loading" @click="goToCheckout">Checkout</button>
+          <div v-show="items && items.length === 0">
+            <p>Cart is empty</p>
+          </div>
+          <footer
+            class="
+              sticky
+              bottom-0
+              w-full
+              left-0
+              py-4
+              bg-white
+              border-t border-gray-200
+              z-10
+            "
+          >
+            <div class="flex justify-between pb-2">
+              <div>
+                <p class="text-2xl">Total</p>
+                <p class="text-xs text-gray-600">
+                  Not including taxes and shipping fees
+                </p>
+              </div>
+              <p class="text-2xl text-right">
+                {{
+                  checkout.paymentDueV2 && formatMoney(checkout.paymentDueV2)
+                }}
+              </p>
+            </div>
+
+            <cta-button
+              :disabled="loading"
+              class="my-2"
+              @click.native="goToCheckout"
+              >Checkout</cta-button
+            >
+          </footer>
+        </div>
+      </div>
     </div>
-    <div v-show="items && items.length === 0">
-      <p>Cart is empty</p>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <script>
+import formatMoney from '@/lib/formatMoney'
 import { mapActions, mapState } from 'vuex'
 import debounce from 'lodash/debounce'
+import VueNumberInput from '@chenfengyuan/vue-number-input'
 export default {
-  data() {
-    return {
-      // Store and render this value while component input is sync'ing with vuex
-      tempQty: {},
-    }
+  components: {
+    VueNumberInput,
   },
   computed: {
-    ...mapState(['loading', 'checkout']),
+    ...mapState(['loading', 'checkout', 'showCart']),
     items() {
       return this.checkout.lineItems
     },
   },
   methods: {
-    ...mapActions(['removeItem', 'updateItemQuantity']),
+    ...mapActions(['removeItem', 'updateItemQuantity', 'setShowCart']),
+    formatMoney,
     goToCheckout() {
-      window.open(this.checkout.webUrl)
+      window.location.href = this.checkout.webUrl
     },
-    handleQuantityChange: debounce(function (e, item) {
-      const type = e.target.type
-      let value = e.target.value
-
-      if (type === 'number' && value !== '') {
+    handleQuantityChange: debounce(function (inputVal, item) {
+      if (inputVal === '') return
+      let value = inputVal
+      if (typeof value === 'string') {
         value = parseInt(value)
       }
 
-      // Store its value, so that it can be rendered as the input value while Vuex is updating
-      this.tempQty[item.id] = value
-
-      if (value !== '') {
+      if (typeof value === 'number') {
         this.updateItemQuantity({
           variantId: item.id,
           quantity: value,
@@ -75,4 +188,37 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="postcss">
+.fade-enter-active,
+.fade-leave-active {
+  @apply duration-300;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  @apply bg-opacity-0;
+}
+
+.number-input {
+  @apply w-24 flex-shrink-0 mr-4;
+}
+
+.number-input__input {
+  @apply text-xs !important;
+}
+
+/* .number-input__button--minus,
+.number-input__button--plus {
+  @apply border-0 !important;
+} */
+
+.number-input__button:hover::before,
+.number-input__button:hover::after {
+  @apply bg-black !important;
+}
+
+.number-input__button::before {
+  width: 35% !important;
+}
+.number-input__button::after {
+  height: 40% !important;
+}
+</style>
