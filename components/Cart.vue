@@ -193,7 +193,15 @@
               v-show="cartCount === 0"
               :disabled="loading"
               class="my-2"
-              @click.native="$router.push('/')"
+              @click.native="
+                () => {
+                  if ($route.name === 'prints' || $route.name === 'index') {
+                    setShowCart(false)
+                  } else {
+                    $router.push('/')
+                  }
+                }
+              "
               >Shop for Prints</cta-button
             >
           </footer>
