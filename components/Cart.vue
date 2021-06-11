@@ -33,7 +33,7 @@
               <v-icon name="x" aria-label="Close Cart" />
             </button>
           </header>
-          <div v-show="items && items.length > 0" class="py-8">
+          <div v-show="cartCount > 0" class="py-8">
             <ul>
               <li v-for="item in items" :key="item.id">
                 <div class="grid grid-cols-12 mb-8 gap-4">
@@ -55,16 +55,26 @@
                     "
                   >
                     <div>
-                      <p class="text-sm underline">
-                        <NuxtLink
-                          :to="{
-                            name: 'prints-handle',
-                            params: { handle: item.variant.product.handle },
-                          }"
-                        >
-                          {{ item.title }}
-                        </NuxtLink>
-                      </p>
+                      <button
+                        class="text-sm underline"
+                        @click="
+                          () => {
+                            if (
+                              $route.params.handle ===
+                              item.variant.product.handle
+                            ) {
+                              setShowCart(false)
+                            } else {
+                              $router.push({
+                                name: 'prints-handle',
+                                params: { handle: item.variant.product.handle },
+                              })
+                            }
+                          }
+                        "
+                      >
+                        {{ item.title }}
+                      </button>
                       <p class="text-sm text-gray-600">
                         {{ item.variant.title }}
                       </p>
@@ -107,8 +117,12 @@
               </li>
             </ul>
           </div>
-          <div v-show="items && items.length === 0">
-            <p>Cart is empty</p>
+          <div v-show="cartCount === 0">
+            <img
+              src="~/assets/images/graphic_empty_boxes.svg"
+              class="cart-empty-img"
+            />
+            <p class="text-lg text-center mx-auto mb-4">Your cart is empty!</p>
           </div>
           <footer
             class="
@@ -122,7 +136,7 @@
               z-10
             "
           >
-            <div class="flex justify-between pb-2">
+            <div v-show="cartCount > 0" class="flex justify-between pb-2">
               <div>
                 <p class="text-2xl">Total</p>
                 <p class="text-xs text-gray-600">
@@ -137,10 +151,19 @@
             </div>
 
             <cta-button
+              v-show="cartCount > 0"
               :disabled="loading"
               class="my-2"
               @click.native="goToCheckout"
-              >Checkout</cta-button
+            >
+              Checkout
+            </cta-button>
+            <cta-button
+              v-show="cartCount === 0"
+              :disabled="loading"
+              class="my-2"
+              @click.native="$router.push('/')"
+              >Shop for Prints</cta-button
             >
           </footer>
         </div>
@@ -151,7 +174,7 @@
 
 <script>
 import formatMoney from '@/lib/formatMoney'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import debounce from 'lodash/debounce'
 import VueNumberInput from '@chenfengyuan/vue-number-input'
 export default {
@@ -160,6 +183,7 @@ export default {
   },
   computed: {
     ...mapState(['loading', 'checkout', 'showCart']),
+    ...mapGetters(['cartCount']),
     items() {
       return this.checkout.lineItems
     },
@@ -188,7 +212,7 @@ export default {
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .fade-enter-active,
 .fade-leave-active {
   @apply duration-300;
@@ -220,5 +244,10 @@ export default {
 }
 .number-input__button::after {
   height: 40% !important;
+}
+
+.cart-empty-img {
+  @apply opacity-50 max-w-md mx-auto;
+  filter: grayscale(100%);
 }
 </style>

@@ -28,4 +28,8 @@ export default {
     @apply cursor-auto;
   }
 }
+
+.cta-button.invert {
+  @apply bg-white text-black border border-black;
+}
 </style>

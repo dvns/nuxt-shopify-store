@@ -1,6 +1,5 @@
 <template>
   <div class="container mx-auto px-4">
-    <!-- <NuxtLink to="/prints">Back to Prints</NuxtLink> -->
     <h1 class="title my-12">{{ product.title }}</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="aspect-w-1 aspect-h-1 mb-8">
@@ -11,7 +10,7 @@
         />
       </div>
       <div>
-        <form class="mx-auto sm:max-w-sm p-4 pt-0">
+        <form class="mx-auto sm:max-w-sm pt-0 pb-4 sm:px-4">
           <p class="pb-2">Print options:</p>
           <fieldset class="pb-4" :disabled="loading" :aria-busy="loading">
             <v-select
@@ -21,6 +20,7 @@
               :searchable="false"
               :clearable="false"
               class="product-select"
+              :components="{ OpenIndicator }"
             />
           </fieldset>
 
@@ -34,7 +34,10 @@
           </div>
           <fieldset :disabled="loading" :aria-busy="loading">
             <cta-button
+              type="button"
               :disabled="!selected.available || loading"
+              :class="!selected.available ? 'oos-button' : ''"
+              class="mb-4"
               @click.native="
                 () => {
                   addItem(selected.id).then(() => {
@@ -45,15 +48,27 @@
             >
               {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
             </cta-button>
+            <cta-button
+              v-show="cartCount > 0"
+              type="button"
+              class="invert"
+              @click.native="setShowCart(true)"
+              >View Cart</cta-button
+            >
           </fieldset>
         </form>
       </div>
+    </div>
+    <div class="mx-auto text-center py-8 mb-4">
+      <NuxtLink to="/prints" class="underline text-center"
+        >Back to Prints</NuxtLink
+      >
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import formatMoney from '@/lib/formatMoney'
@@ -66,8 +81,16 @@ export default {
     const product = await $shopify.product.fetchByHandle(params.handle)
     return { product, selected: product.variants[0] }
   },
+  data() {
+    return {
+      OpenIndicator: {
+        render: () => <v-icon name="chevron-down" class="w-5" />,
+      },
+    }
+  },
   computed: {
     ...mapState(['loading']),
+    ...mapGetters(['cartCount']),
   },
   methods: {
     formatMoney,
@@ -88,6 +111,10 @@ export default {
 }
 
 ::v-deep .product-select .vs__open-indicator {
-  @apply fill-current;
+  fill: none;
+}
+
+.oos-button {
+  @apply border-gray-200 text-gray-600 bg-gray-200 !important;
 }
 </style>

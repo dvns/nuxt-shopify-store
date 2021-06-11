@@ -1,8 +1,21 @@
 <template>
-  <header class="container mx-auto p-4 relative flex justify-between">
-    <h1 class="font-serif tracking-widest text-sm">DAVIN SUEN PHOTO</h1>
+  <header
+    class="
+      container
+      mx-auto
+      p-4
+      relative
+      flex
+      justify-between
+      items-center
+      border-b border-gray-200
+    "
+  >
+    <NuxtLink to="/" class="font-serif tracking-widest text-sm mt-2">
+      DAVIN SUEN PHOTO
+    </NuxtLink>
     <button class="w-6 relative" @click="setShowCart(!showCart)">
-      <v-icon name="shopping-bag" aria-label="Open Cart" />
+      <v-icon name="shopping-cart" aria-label="Open Cart" />
       <div
         v-show="cartCount !== 0"
         class="
@@ -12,8 +25,8 @@
           top-1/2
           right-1/2
           rounded-full
-          bg-black
-          text-white text-center
+          bg-gray-400
+          text-center
           flex
           items-center
           justify-center
