@@ -38,6 +38,7 @@ export default {
     ['@nuxtjs/eslint-module', { fix: true }],
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxt/image',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -89,5 +90,23 @@ export default {
      * Set language to return translated content (optional)
      */
     // language: 'ja-JP',
+  },
+
+  // https://image.nuxtjs.org/api/options
+  image: {
+    // Options
+    domains: [process.env.IMAGE_KIT_ENDPOINT],
+    imagekit: {
+      baseURL: process.env.IMAGE_KIT_ENDPOINT,
+    },
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+      '2xl': 1536,
+    },
   },
 }

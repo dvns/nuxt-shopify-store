@@ -3,9 +3,11 @@
     <h1 class="title my-12">{{ product.title }}</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="aspect-w-1 aspect-h-1 mb-8">
-        <img
-          :src="product.images[0].src"
+        <nuxt-img
+          provider="imagekit"
+          :src="imgSrc(product.images[0].src)"
           :alt="product.description"
+          sizes="sm:100vw md:50vw lg:1024px xl:1024px"
           class="object-contain"
         />
       </div>
@@ -75,6 +77,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import formatMoney from '@/lib/formatMoney'
+import imgSrc from '@/lib/imgSrc'
 
 export default {
   components: {
@@ -97,6 +100,7 @@ export default {
   },
   methods: {
     formatMoney,
+    imgSrc,
     ...mapActions(['addItem', 'setShowCart']),
   },
 }

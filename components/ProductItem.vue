@@ -1,9 +1,11 @@
 <template>
   <NuxtLink :to="`prints/${product.handle}`">
     <div class="aspect-w-1 aspect-h-1">
-      <img
-        :src="product.images[0].src"
+      <nuxt-img
+        provider="imagekit"
+        :src="imgSrc(product.images[0].src)"
         :alt="product.description"
+        sizes="sm:100vw md:100vw lg:600px xl:600px"
         class="object-contain"
       />
     </div>
@@ -18,6 +20,7 @@
 
 <script>
 import formatMoney from '@/lib/formatMoney'
+import imgSrc from '@/lib/imgSrc'
 export default {
   props: {
     product: {
@@ -40,6 +43,9 @@ export default {
       )
       return formatMoney(variantWithLowestPrice.priceV2)
     },
+  },
+  methods: {
+    imgSrc,
   },
 }
 </script>
