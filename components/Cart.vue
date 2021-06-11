@@ -8,18 +8,28 @@
       <div
         class="
           w-full
+          md:w-8/12
+          lg:w-6/12
+          xl:w-5/12 xl:max-w-xl
           h-auto
           max-h-screen
+          md:h-screen
           bg-white
           px-4
           transform
           transition-transform
           absolute
+          md:right-0
           bottom-0
           duration-300
           overflow-y-auto
+          md:translate-y-0
         "
-        :class="showCart ? 'transform-translate-y' : 'translate-y-full'"
+        :class="
+          showCart
+            ? 'transform-translate-y md:transform-translate-x'
+            : 'translate-y-full md:translate-x-full'
+        "
       >
         <div class="max-w-xl mx-auto px-4">
           <header
