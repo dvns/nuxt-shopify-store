@@ -94,6 +94,11 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      title: `Prints | ${this.product.title}`,
+    }
+  },
   computed: {
     ...mapState(['loading', 'adding']),
     ...mapGetters(['cartCount']),
