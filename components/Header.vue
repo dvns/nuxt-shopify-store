@@ -14,7 +14,7 @@
     <NuxtLink to="/" class="font-serif tracking-widest text-sm mt-2">
       DAVIN SUEN PHOTO
     </NuxtLink>
-    <button class="w-6 relative" @click="setShowCart(!showCart)">
+    <button class="w-5 relative" @click="setShowCart(!showCart)">
       <v-icon name="shopping-cart" aria-label="Open Cart" />
       <div
         v-show="cartCount !== 0"

@@ -1,11 +1,18 @@
 <template>
-  <transition name="fade">
-    <div
-      v-show="showCart"
-      class="w-full h-screen bg-gray-800 bg-opacity-75 transition fixed z-50"
-      @click.self="setShowCart(false)"
-    >
+  <div class="w-full h-screen fixed z-50 pointer-events-none">
+    <!-- Overlay -->
+    <transition name="fade">
       <div
+        v-show="showCart"
+        class="w-full h-full bg-gray-800 bg-opacity-75 pointer-events-auto"
+        @click="setShowCart(false)"
+      ></div>
+    </transition>
+
+    <!-- Cart -->
+    <transition name="slide">
+      <div
+        v-show="showCart"
         class="
           w-full
           md:w-8/12
@@ -21,14 +28,10 @@
           absolute
           md:right-0
           bottom-0
-          duration-300
           overflow-y-auto
-          md:translate-y-0
-        "
-        :class="
-          showCart
-            ? 'transform-translate-y md:transform-translate-x'
-            : 'translate-y-full md:translate-x-full'
+          transform-translate-y
+          md:transform-translate-x
+          pointer-events-auto
         "
       >
         <div class="max-w-xl mx-auto px-4">
@@ -186,8 +189,8 @@
           </footer>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -235,8 +238,22 @@ export default {
 .fade-leave-active {
   @apply duration-300;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   @apply bg-opacity-0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  @apply duration-300;
+}
+.slide-enter,
+.slide-leave-to {
+  @apply translate-y-full;
+
+  @screen md {
+    @apply translate-x-full translate-y-0;
+  }
 }
 
 .number-input {
