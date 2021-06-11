@@ -71,6 +71,7 @@
                       >
                         <div>
                           <button
+                            type="button"
                             class="text-sm underline"
                             @click="
                               () => {
@@ -106,6 +107,7 @@
                             @change="(val) => handleQuantityChange(val, item)"
                           />
                           <button
+                            type="button"
                             :disabled="loading"
                             class="text-xs underline"
                             @click="() => removeItem(item.id)"
