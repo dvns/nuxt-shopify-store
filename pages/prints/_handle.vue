@@ -35,8 +35,8 @@
           <fieldset :disabled="loading" :aria-busy="loading">
             <cta-button
               type="button"
-              :disabled="!selected.available || loading"
-              :class="!selected.available ? 'oos-button' : ''"
+              :disabled="!selected.available || adding"
+              :class="{ 'oos-button': !selected.available }"
               class="mb-4"
               @click.native="
                 () => {
@@ -46,7 +46,10 @@
                 }
               "
             >
-              {{ selected.available ? 'Add to Cart' : 'Out of stock' }}
+              <span v-show="selected.available">{{
+                adding ? 'Adding to Cart...' : 'Add to Cart'
+              }}</span>
+              <span v-show="!selected.available">Out of stock</span>
             </cta-button>
             <cta-button
               v-show="cartCount > 0"
@@ -89,7 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['loading']),
+    ...mapState(['loading', 'adding']),
     ...mapGetters(['cartCount']),
   },
   methods: {

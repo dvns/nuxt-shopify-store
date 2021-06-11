@@ -47,88 +47,91 @@
             </button>
           </header>
           <div v-show="cartCount > 0" class="py-8">
-            <ul>
-              <li v-for="item in items" :key="item.id">
-                <div class="grid grid-cols-12 mb-8 gap-4">
-                  <div class="col-span-3 sm:col-span-2">
-                    <div class="aspect-w-2 aspect-h-2">
-                      <img
-                        :src="item.variant.image.src"
-                        :alt="item.variant.image.altText"
-                        class="object-cover"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="
-                      col-span-6
-                      sm:col-span-7
-                      flex flex-col
-                      justify-between
-                    "
-                  >
-                    <div>
-                      <button
-                        class="text-sm underline"
-                        @click="
-                          () => {
-                            if (
-                              $route.params.handle ===
-                              item.variant.product.handle
-                            ) {
-                              setShowCart(false)
-                            } else {
-                              $router.push({
-                                name: 'prints-handle',
-                                params: { handle: item.variant.product.handle },
-                              })
-                            }
-                          }
+            <form>
+              <fieldset :aria-busy="isLoading" :disabled="isLoading">
+                <ul>
+                  <li v-for="item in items" :key="item.id">
+                    <div class="grid grid-cols-12 mb-8 gap-4">
+                      <div class="col-span-3 sm:col-span-2">
+                        <div class="aspect-w-2 aspect-h-2">
+                          <img
+                            :src="item.variant.image.src"
+                            :alt="item.variant.image.altText"
+                            class="object-cover"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="
+                          col-span-6
+                          sm:col-span-7
+                          flex flex-col
+                          justify-between
                         "
                       >
-                        {{ item.title }}
-                      </button>
-                      <p class="text-sm text-gray-600">
-                        {{ item.variant.title }}
-                      </p>
+                        <div>
+                          <button
+                            class="text-sm underline"
+                            @click="
+                              () => {
+                                if (
+                                  $route.params.handle ===
+                                  item.variant.product.handle
+                                ) {
+                                  setShowCart(false)
+                                } else {
+                                  $router.push({
+                                    name: 'prints-handle',
+                                    params: {
+                                      handle: item.variant.product.handle,
+                                    },
+                                  })
+                                }
+                              }
+                            "
+                          >
+                            {{ item.title }}
+                          </button>
+                          <p class="text-sm text-gray-600">
+                            {{ item.variant.title }}
+                          </p>
+                        </div>
+                        <div class="flex content-center">
+                          <vue-number-input
+                            :min="0"
+                            center
+                            controls
+                            size="small"
+                            :value="item.quantity"
+                            @change="(val) => handleQuantityChange(val, item)"
+                          />
+                          <button
+                            :disabled="loading"
+                            class="text-xs underline"
+                            @click="() => removeItem(item.id)"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                      <div class="col-span-3 flex justify-end">
+                        <p class="text-lg text-right my-auto">
+                          {{
+                            checkout.paymentDueV2 &&
+                            formatMoney({
+                              ...checkout.paymentDueV2,
+                              amount: (
+                                parseFloat(item.variant.price) * item.quantity
+                              ).toFixed(2),
+                            })
+                          }}
+                        </p>
+                      </div>
                     </div>
-                    <div class="flex content-center">
-                      <vue-number-input
-                        :min="0"
-                        center
-                        controls
-                        size="small"
-                        :value="item.quantity"
-                        @change="(e) => handleQuantityChange(e, item)"
-                        @input="
-                          (e) => handleQuantityChange(e.target.value, item)
-                        "
-                      />
-                      <button
-                        :disabled="loading"
-                        class="text-xs underline"
-                        @click="() => removeItem(item.id)"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                  <div class="col-span-3 flex justify-end">
-                    <p class="text-lg text-right my-auto">
-                      {{
-                        checkout.paymentDueV2 &&
-                        formatMoney({
-                          ...checkout.paymentDueV2,
-                          amount: (
-                            parseFloat(item.variant.price) * item.quantity
-                          ).toFixed(2),
-                        })
-                      }}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            </ul>
+                  </li>
+                </ul>
+              </fieldset>
+            </form>
           </div>
           <div v-show="cartCount === 0">
             <img
@@ -149,7 +152,11 @@
               z-10
             "
           >
-            <div v-show="cartCount > 0" class="flex justify-between pb-2">
+            <div
+              v-show="cartCount > 0"
+              class="flex justify-between pb-2 duration-300"
+              :class="{ 'opacity-50': isLoading }"
+            >
               <div>
                 <p class="text-2xl">Total</p>
                 <p class="text-xs text-gray-600">
@@ -165,8 +172,9 @@
 
             <cta-button
               v-show="cartCount > 0"
-              :disabled="loading"
-              class="my-2"
+              :disabled="isLoading"
+              class="my-2 duration-300"
+              :class="{ 'opacity-50': isLoading }"
               @click.native="goToCheckout"
             >
               Checkout
@@ -203,10 +211,13 @@ export default {
     VueNumberInput,
   },
   computed: {
-    ...mapState(['loading', 'checkout', 'showCart']),
+    ...mapState(['loading', 'removing', 'adding', 'checkout', 'showCart']),
     ...mapGetters(['cartCount']),
     items() {
       return this.checkout.lineItems
+    },
+    isLoading() {
+      return this.loading || this.adding || this.removing
     },
   },
   methods: {
@@ -216,7 +227,7 @@ export default {
       window.location.href = this.checkout.webUrl
     },
     handleQuantityChange: debounce(function (inputVal, item) {
-      if (inputVal === '') return
+      if (inputVal === '' || inputVal === item.quantity) return
       let value = inputVal
       if (typeof value === 'string') {
         value = parseInt(value)
@@ -264,11 +275,6 @@ export default {
   @apply text-xs !important;
 }
 
-/* .number-input__button--minus,
-.number-input__button--plus {
-  @apply border-0 !important;
-} */
-
 .number-input__button:hover::before,
 .number-input__button:hover::after {
   @apply bg-black !important;
@@ -284,5 +290,12 @@ export default {
 .cart-empty-img {
   @apply opacity-50 max-w-md mx-auto;
   filter: grayscale(100%);
+}
+
+fieldset {
+  @apply duration-300;
+}
+fieldset:disabled {
+  @apply opacity-50 pointer-events-none;
 }
 </style>

@@ -1,5 +1,7 @@
 export const state = () => ({
   checkout: {},
+  adding: false,
+  removing: false,
   loading: false,
   showCart: false,
 })
@@ -26,6 +28,12 @@ export const mutations = {
   },
   UPDATE_LOADING(state, loading) {
     state.loading = loading
+  },
+  UPDATE_ADDING(state, adding) {
+    state.adding = adding
+  },
+  UPDATE_REMOVING(state, removing) {
+    state.removing = removing
   },
   SET_SHOW_CART(state, showCart) {
     state.showCart = showCart
@@ -57,7 +65,7 @@ export const actions = {
       },
     ]
 
-    commit('UPDATE_LOADING', true)
+    commit('UPDATE_ADDING', true)
 
     if (!state.checkout.id) {
       // console.log('# Checkout does not exist! Creating a new one.')
@@ -67,20 +75,20 @@ export const actions = {
       .addLineItems(state.checkout.id, lineItemsToAdd)
       .then((checkout) => {
         commit('UPDATE_CHECKOUT', checkout)
-        commit('UPDATE_LOADING', false)
+        commit('UPDATE_ADDING', false)
       })
   },
 
   async removeItem({ commit, state }, variantId) {
     const lineItemIdsToRemove = [variantId]
 
-    commit('UPDATE_LOADING', true)
+    commit('UPDATE_REMOVING', true)
 
     await this.$shopify.checkout
       .removeLineItems(state.checkout.id, lineItemIdsToRemove)
       .then((checkout) => {
         commit('UPDATE_CHECKOUT', checkout)
-        commit('UPDATE_LOADING', false)
+        commit('UPDATE_REMOVING', false)
       })
   },
 
