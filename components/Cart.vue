@@ -169,6 +169,14 @@
               Checkout
             </cta-button>
             <cta-button
+              v-show="cartCount > 0"
+              :disabled="loading"
+              class="my-2 invert"
+              @click.native="setShowCart(false)"
+            >
+              Continue Shopping
+            </cta-button>
+            <cta-button
               v-show="cartCount === 0"
               :disabled="loading"
               class="my-2"
