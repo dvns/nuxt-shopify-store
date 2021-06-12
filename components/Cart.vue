@@ -34,7 +34,7 @@
           pointer-events-auto
         "
       >
-        <div class="max-w-xl mx-auto px-4">
+        <div class="max-w-xl mx-auto sm:px-4">
           <header
             class="sticky top-0 bg-white z-10 py-8 border-b border-gray-200"
           >
@@ -51,55 +51,12 @@
               <fieldset :aria-busy="isLoading" :disabled="isLoading">
                 <ul>
                   <li v-for="item in items" :key="item.id">
-                    <div class="grid grid-cols-12 mb-8 gap-4">
-                      <div class="col-span-3 sm:col-span-2">
-                        <div class="aspect-w-2 aspect-h-2">
-                          <nuxt-img
-                            provider="imagekit"
-                            :src="imgSrc(item.variant.image.src)"
-                            :alt="item.variant.image.altText"
-                            sizes="sm:125px"
-                            class="object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div
-                        class="
-                          col-span-6
-                          sm:col-span-7
-                          flex flex-col
-                          justify-between
-                        "
-                      >
-                        <div>
-                          <button
-                            type="button"
-                            class="text-sm underline"
-                            @click="
-                              () => {
-                                if (
-                                  $route.params.handle ===
-                                  item.variant.product.handle
-                                ) {
-                                  setShowCart(false)
-                                } else {
-                                  $router.push({
-                                    name: 'prints-handle',
-                                    params: {
-                                      handle: item.variant.product.handle,
-                                    },
-                                  })
-                                }
-                              }
-                            "
-                          >
-                            {{ item.title }}
-                          </button>
-                          <p class="text-sm text-gray-600">
-                            {{ item.variant.title }}
-                          </p>
-                        </div>
-                        <div class="flex content-center">
+                    <div
+                      class="grid grid-cols-12 mb-8 gap-2 sm:gap-4 items-center"
+                    >
+                      <!-- Qty & Image -->
+                      <div class="col-span-3 flex items-center">
+                        <div class="mr-2 sm:mr-4">
                           <vue-number-input
                             :min="0"
                             center
@@ -113,18 +70,69 @@
                             @input="(e) => handleInput(e, item)"
                             @keypress="isNumber($event)"
                           />
-                          <button
-                            type="button"
-                            :disabled="loading"
-                            class="text-xs underline"
-                            @click="() => removeItem(item.id)"
-                          >
-                            Remove
-                          </button>
+                        </div>
+
+                        <div class="flex-grow">
+                          <div class="aspect-w-2 aspect-h-2 w-full">
+                            <nuxt-img
+                              provider="imagekit"
+                              :src="imgSrc(item.variant.image.src)"
+                              :alt="item.variant.image.altText"
+                              sizes="sm:125px"
+                              class="object-cover"
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div class="col-span-3 flex justify-end">
-                        <p class="text-lg text-right my-auto">
+                      <!-- Title -->
+                      <div class="col-span-5">
+                        <button
+                          type="button"
+                          class="text-sm underline"
+                          @click="
+                            () => {
+                              if (
+                                $route.params.handle ===
+                                item.variant.product.handle
+                              ) {
+                                setShowCart(false)
+                              } else {
+                                $router.push({
+                                  name: 'prints-handle',
+                                  params: {
+                                    handle: item.variant.product.handle,
+                                  },
+                                })
+                              }
+                            }
+                          "
+                        >
+                          {{ item.title }}
+                        </button>
+                        <p class="text-sm text-gray-600">
+                          {{ item.variant.title }}
+                        </p>
+                      </div>
+                      <div
+                        class="
+                          col-span-1
+                          sm:col-span-2
+                          flex
+                          justify-end
+                          items-center
+                        "
+                      >
+                        <button
+                          type="button"
+                          :disabled="loading"
+                          class="w-5 text-gray-600 text-center"
+                          @click="() => removeItem(item.id)"
+                        >
+                          <v-icon name="trash-2" aria-label="Remove Item" />
+                        </button>
+                      </div>
+                      <div class="col-span-3 sm:col-span-2 flex justify-end">
+                        <p class="text-base text-right my-auto">
                           {{
                             checkout.paymentDueV2 &&
                             formatMoney({
@@ -310,23 +318,51 @@ export default {
 }
 
 .number-input {
-  @apply w-24 flex-shrink-0 mr-4;
+  @apply w-6 flex flex-col-reverse items-center overflow-visible !important;
 }
 
-.number-input__input {
-  @apply text-xs !important;
+::v-deep .number-input__input {
+  @apply text-xs w-full min-w-full h-6 p-0 rounded-none border-0 border-transparent bg-gray-200 !important;
 }
 
-.number-input__button:hover::before,
-.number-input__button:hover::after {
-  @apply bg-black !important;
+::v-deep .number-input__input:focus {
+  @apply border-black border !important;
+  box-shadow: none !important;
 }
 
-.number-input__button::before {
-  width: 35% !important;
+::v-deep .number-input__button {
+  @apply relative w-full inset-auto h-6 rounded-none border-0 !important;
 }
-.number-input__button::after {
-  height: 40% !important;
+
+::v-deep .number-input__button::before {
+  @apply inline-block
+    w-2
+    h-2
+    absolute
+    inset-auto
+    bottom-0
+    my-1
+    transform
+    -rotate-45 
+    -translate-x-1/2
+    origin-center
+    border-solid
+    border-t
+    border-r
+    border-b-0
+    border-l-0
+    border-black
+    bg-transparent
+    !important;
+  content: '' !important;
+}
+
+::v-deep .number-input__button--minus::before {
+  @apply rotate-135 top-0 !important;
+}
+
+::v-deep .number-input__button::after {
+  @apply hidden;
 }
 
 .cart-empty-img {
