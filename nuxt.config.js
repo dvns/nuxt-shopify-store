@@ -26,7 +26,7 @@ export default {
   ],
 
   router: {
-    middleware: 'checkout',
+    middleware: ['checkout'],
   },
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
