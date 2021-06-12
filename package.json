@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-shopify",
+  "name": "nuxt-shopify-store",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -12,10 +12,19 @@
     "test": "jest"
   },
   "dependencies": {
+    "@chenfengyuan/vue-number-input": "^1.2.1",
+    "@tailwindcss/aspect-ratio": "^0.2.1",
+    "@tailwindcss/forms": "^0.3.3",
     "core-js": "^3.6.5",
-    "nuxt": "^2.14.6"
+    "lodash": "^4.17.21",
+    "nuxt": "^2.14.6",
+    "nuxt-shopify": "^1.10.7",
+    "vue-icon": "^2.2.0",
+    "vue-select": "^3.11.2",
+    "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "devDependencies": {
+    "@nuxt/image": "^0.4.14",
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/tailwindcss": "^3.1.0",
