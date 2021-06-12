@@ -1,7 +1,7 @@
 export default function ({ app, store }) {
   app.router.onReady(async () => {
-    console.log(store.getters.checkoutId)
-    console.log(store.getters.isCheckoutComplete)
+    // console.log(store.getters.checkoutId)
+    // console.log(store.getters.isCheckoutComplete)
 
     if (!store.getters.checkoutId) {
       await store.dispatch('createCheckout')
