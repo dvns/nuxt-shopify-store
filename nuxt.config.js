@@ -63,6 +63,7 @@ export default {
           transitionProperty: { height: 'height' },
           inset: {
             '1/2': '50%',
+            full: '100%',
           },
           rotate: {
             '-180': '-180deg',
