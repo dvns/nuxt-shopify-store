@@ -54,9 +54,11 @@
                     <div class="grid grid-cols-12 mb-8 gap-4">
                       <div class="col-span-3 sm:col-span-2">
                         <div class="aspect-w-2 aspect-h-2">
-                          <img
-                            :src="item.variant.image.src"
+                          <nuxt-img
+                            provider="imagekit"
+                            :src="imgSrc(item.variant.image.src)"
                             :alt="item.variant.image.altText"
+                            sizes="sm:125px"
                             class="object-cover"
                           />
                         </div>
@@ -217,10 +219,12 @@
 </template>
 
 <script>
-import formatMoney from '@/lib/formatMoney'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import debounce from 'lodash/debounce'
 import VueNumberInput from '@chenfengyuan/vue-number-input'
+import formatMoney from '@/lib/formatMoney'
+import imgSrc from '@/lib/imgSrc'
+
 export default {
   components: {
     VueNumberInput,
@@ -243,6 +247,7 @@ export default {
   methods: {
     ...mapActions(['removeItem', 'updateItemQuantity', 'setShowCart']),
     formatMoney,
+    imgSrc,
     goToCheckout() {
       window.location.href = this.checkout.webUrl
     },
