@@ -23,10 +23,11 @@ export default {
   plugins: [
     { src: '~/plugins/persistedState.client.js', ssr: false },
     { src: '~/plugins/featherIcons.js' },
+    { src: '~/plugins/checkout.js', ssr: false },
   ],
 
   router: {
-    middleware: 'checkout',
+    middleware: ['checkout'],
   },
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

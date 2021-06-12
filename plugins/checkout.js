@@ -1,5 +1,5 @@
-export default async function ({ store }) {
-  if (!process.server) {
+export default function ({ app, store }) {
+  app.router.onReady(async () => {
     if (!store.getters.checkoutId) {
       await store.dispatch('createCheckout')
     }
@@ -15,5 +15,5 @@ export default async function ({ store }) {
         await store.dispatch('createCheckout')
       }
     }
-  }
+  })
 }
