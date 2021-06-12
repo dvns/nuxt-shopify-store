@@ -47,7 +47,7 @@
             </button>
           </header>
           <div v-show="cartCount > 0" class="py-8">
-            <form>
+            <form @submit.prevent>
               <fieldset :aria-busy="isLoading" :disabled="isLoading">
                 <ul>
                   <li v-for="item in items" :key="item.id">
@@ -104,7 +104,12 @@
                             controls
                             size="small"
                             :value="item.quantity"
-                            @change="(val) => handleQuantityChange(val, item)"
+                            @change="
+                              (newVal, oldVal) =>
+                                handleChange(newVal, oldVal, item)
+                            "
+                            @input="(e) => handleInput(e, item)"
+                            @keypress="isNumber($event)"
                           />
                           <button
                             type="button"
@@ -220,6 +225,11 @@ export default {
   components: {
     VueNumberInput,
   },
+  data() {
+    return {
+      preventUpdate: false,
+    }
+  },
   computed: {
     ...mapState(['loading', 'removing', 'adding', 'checkout', 'showCart']),
     ...mapGetters(['cartCount']),
@@ -236,9 +246,13 @@ export default {
     goToCheckout() {
       window.location.href = this.checkout.webUrl
     },
-    handleQuantityChange: debounce(function (inputVal, item) {
-      if (inputVal === '' || inputVal === item.quantity) return
-      let value = inputVal
+    isNumber(e) {
+      // Validate that input is a number
+      if (!/^[0-9]+$/.test(e.key) || e.key === '.') return e.preventDefault()
+    },
+    handleInput: debounce(function (e, item) {
+      let value = e.target.value
+      if (value === '') return
       if (typeof value === 'string') {
         value = parseInt(value)
       }
@@ -247,6 +261,19 @@ export default {
         this.updateItemQuantity({
           variantId: item.id,
           quantity: value,
+        })
+        this.preventUpdate = true
+      }
+    }, 500),
+    handleChange: debounce(function (newVal, oldVal, item) {
+      if (newVal === oldVal || isNaN(oldVal)) return
+      if (this.preventUpdate) {
+        // Vuex is already updated via @input event, so don't update state again on change
+        this.preventUpdate = false
+      } else {
+        this.updateItemQuantity({
+          variantId: item.id,
+          quantity: newVal,
         })
       }
     }, 500),
