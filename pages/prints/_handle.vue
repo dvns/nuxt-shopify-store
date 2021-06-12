@@ -94,11 +94,6 @@ export default {
       },
     }
   },
-  head() {
-    return {
-      title: `Prints | ${this.product.title}`,
-    }
-  },
   computed: {
     ...mapState(['loading', 'adding']),
     ...mapGetters(['cartCount']),
@@ -107,6 +102,11 @@ export default {
     formatMoney,
     imgSrc,
     ...mapActions(['addItem', 'setShowCart']),
+  },
+  head() {
+    return {
+      title: `Prints | ${this.product.title}`,
+    }
   },
 }
 </script>
