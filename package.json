@@ -19,6 +19,7 @@
     "lodash": "^4.17.21",
     "nuxt": "^2.14.6",
     "nuxt-shopify": "^1.10.7",
+    "vue-gtag": "^1.16.1",
     "vue-icon": "^2.2.0",
     "vue-select": "^3.11.2",
     "vuex-persistedstate": "^4.0.0-beta.3"

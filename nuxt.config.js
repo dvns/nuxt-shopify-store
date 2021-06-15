@@ -5,6 +5,10 @@ export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
 
+  publicRuntimeConfig: {
+    GTAG_ID: process.env.GTAG_ID,
+  },
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: 'Davin Suen Photo',
@@ -24,6 +28,7 @@ export default {
     { src: '~/plugins/persistedState.client.js', ssr: false },
     { src: '~/plugins/featherIcons.js' },
     { src: '~/plugins/checkout.js', ssr: false },
+    { src: '~/plugins/gtag.js', ssr: false },
   ],
 
   router: {
@@ -63,6 +68,18 @@ export default {
           transitionProperty: { height: 'height' },
           inset: {
             '1/2': '50%',
+            full: '100%',
+          },
+          rotate: {
+            '-180': '-180deg',
+            '-90': '-90deg',
+            '-45': '-45deg',
+            0: '0',
+            45: '45deg',
+            90: '90deg',
+            135: '135deg',
+            180: '180deg',
+            270: '270deg',
           },
         },
       },
